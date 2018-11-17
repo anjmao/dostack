@@ -1,47 +1,45 @@
-version: "3.0"
+version: "3.3"
 
 services:
   app:
     image: nginxdemos/hello
-    restart: always
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.docker.network=traefik"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=Host:ubuntu1.com"
+        - "traefik.port=80"
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 100M
     networks:
-      - traefik
       - default
-    expose:
-      - "9000"
-    labels:
-      - "traefik.docker.network=traefik"
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:ubuntu1.com"
-      - "traefik.port=80"
+      - traefik
 
   app2:
     image: nginxdemos/hello:plain-text
-    restart: always
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role==worker]
+      labels:
+        - "traefik.docker.network=traefik"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=PathPrefixStrip:/app2"
+        - "traefik.port=80"
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 100M
     networks:
-      - traefik
       - default
-    expose:
-      - "9001"
-    labels:
-      - "traefik.docker.network=traefik"
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=PathPrefixStrip:/app2"
-      - "traefik.port=80"
-
-  app3:
-    image: emilevauge/whoami
-    restart: always
-    networks:
       - traefik
-      - default
-    expose:
-      - "9002"
-    labels:
-      - "traefik.docker.network=traefik"
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:app3.ubuntu1.com"
-      - "traefik.port=80"
 
 networks:
   traefik:

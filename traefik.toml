@@ -10,7 +10,7 @@ defaultEntryPoints = ["http"]
   [entryPoints.foo]
   address = ":8082"
 
-  [entryPoints.dashboard]
+  [entryPoints.bar]
   address = ":8083"
   [entryPoints.bar.auth]
      [entryPoints.bar.auth.basic]
@@ -22,7 +22,7 @@ defaultEntryPoints = ["http"]
 entryPoint = "foo"
 
 [api]
-entryPoint = "dashboard"
+entryPoint = "bar"
 dashboard = true
 debug = true
 
@@ -30,5 +30,6 @@ debug = true
 
 [docker]
 endpoint = "unix:///var/run/docker.sock"
-domain = "ubuntu1.com"
 watch = true
+exposedByDefault = true
+swarmMode = true

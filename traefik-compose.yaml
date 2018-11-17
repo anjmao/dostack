@@ -1,20 +1,22 @@
-version: '3'
+version: '3.3'
 
 services:
   traefik:
     image: traefik:1.7.4
-    restart: always
+    deploy:
+      placement:
+        constraints: [node.role==manager]
     ports:
       - 80:80
       - 8082:8082
       - 8083:8083
     networks:
-      - web
+      - default
+      - traefik
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /home/anjmao/traefik/traefik.toml:/traefik.toml
-    container_name: traefik
+      - /home/anjmao/traefik.toml:/traefik.toml
 
 networks:
-  web:
+  traefik:
     external: true
