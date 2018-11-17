@@ -1,0 +1,48 @@
+version: "3.0"
+
+services:
+  app:
+    image: nginxdemos/hello
+    restart: always
+    networks:
+      - traefik
+      - default
+    expose:
+      - "9000"
+    labels:
+      - "traefik.docker.network=traefik"
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:ubuntu1.com"
+      - "traefik.port=80"
+
+  app2:
+    image: nginxdemos/hello:plain-text
+    restart: always
+    networks:
+      - traefik
+      - default
+    expose:
+      - "9001"
+    labels:
+      - "traefik.docker.network=traefik"
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefixStrip:/app2"
+      - "traefik.port=80"
+
+  app3:
+    image: emilevauge/whoami
+    restart: always
+    networks:
+      - traefik
+      - default
+    expose:
+      - "9002"
+    labels:
+      - "traefik.docker.network=traefik"
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:app3.ubuntu1.com"
+      - "traefik.port=80"
+
+networks:
+  traefik:
+    external: true

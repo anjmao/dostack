@@ -1,0 +1,34 @@
+debug = true
+
+logLevel = "INFO"
+defaultEntryPoints = ["http"]
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+
+  [entryPoints.foo]
+  address = ":8082"
+
+  [entryPoints.dashboard]
+  address = ":8083"
+  [entryPoints.bar.auth]
+     [entryPoints.bar.auth.basic]
+       users = [
+         "admin:$apr1$NGhrzweA$Xo5lzolXPzAJ1lj2YkWcg1"
+       ]
+
+[ping]
+entryPoint = "foo"
+
+[api]
+entryPoint = "dashboard"
+dashboard = true
+debug = true
+
+[retry]
+
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "ubuntu1.com"
+watch = true
