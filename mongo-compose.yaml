@@ -1,0 +1,30 @@
+version: '3.3'
+
+services:
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  mongo-express:
+    image: mongo-express
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role==worker]
+      labels:
+        - "traefik.docker.network=traefik"
+        - "traefik.frontend.auth.basic.users=admin:$$apr1$$qh523g8s$$65Di0QlaeixpcVaV/0ISw1"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=Host:mongo.ubuntu1.com"
+        - "traefik.port=8081"
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+
+networks:
+  traefik:
+    external: true

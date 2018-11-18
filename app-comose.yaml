@@ -1,6 +1,22 @@
 version: "3.3"
 
 services:
+
+  visualizer:
+    image: dockersamples/visualizer:stable
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+      labels:
+        - "traefik.docker.network=traefik"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=PathPrefixStrip:/viz"
+        - "traefik.port=80"
+    networks:
+      - traefik
+
   app:
     image: nginxdemos/hello
     deploy:
