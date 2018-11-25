@@ -1,6 +1,7 @@
 #!/bin/bash
 
-sudo apt-get update
-sudo apt-get install docker.io
+adduser username
+sudo usermod -aG sudo username
+sudo apt-get update && apt-get install docker.io
 sudo groupadd docker
-sudo usermod -aG docker anjmao
+sudo usermod -aG docker username

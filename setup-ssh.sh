@@ -4,7 +4,7 @@
 ssh-keygen -t rsa
 
 # copy it to VM
-ssh-copy-id <name>@<ip>
+ssh-copy-id -i ~/.ssh/mykey user@host
 
 # inside vm change ssh config
 
