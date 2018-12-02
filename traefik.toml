@@ -1,35 +1,52 @@
 debug = true
 
 logLevel = "INFO"
-defaultEntryPoints = ["http"]
+defaultEntryPoints = ["https","http"]
 
 [entryPoints]
   [entryPoints.http]
   address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
 
-  [entryPoints.foo]
+  [entryPoints.https]
+  address = ":443"
+  compress = true
+  [entryPoints.https.tls]
+
+  [entryPoints.ping]
   address = ":8082"
 
-  [entryPoints.bar]
-  address = ":8083"
-  [entryPoints.bar.auth]
-     [entryPoints.bar.auth.basic]
-       users = [
-         "admin:$apr1$NGhrzweA$Xo5lzolXPzAJ1lj2YkWcg1"
-       ]
+  [entryPoints.traefik-dashboard]
+  address = ":8080"
+    [entryPoints.traefik-dashboard.auth.basic]
+      users = [
+        "anjmao:$apr1$HlTzKtzG$UE5v6.e1wKh2h6h4TFg9U1"
+      ]
 
 [ping]
-entryPoint = "foo"
+entryPoint = "ping"
 
 [api]
-entryPoint = "bar"
+entryPoint = "traefik-dashboard"
 dashboard = true
-debug = true
+debug = false
+  [api.statistics]
+  recentErrors = 10
 
 [retry]
 
 [docker]
 endpoint = "unix:///var/run/docker.sock"
 watch = true
-exposedByDefault = true
+exposedByDefault = false
 swarmMode = true
+
+[acme]
+email = "info@devx.lt"
+storage = "acme.json"
+entryPoint = "https"
+onDemand = true
+onHostRule = true
+[acme.httpChallenge]
+ entryPoint = "http"

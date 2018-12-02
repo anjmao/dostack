@@ -1,53 +1,18 @@
 version: "3.3"
 
 services:
-
-  visualizer:
-    image: dockersamples/visualizer:stable
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    deploy:
-      placement:
-        constraints: [node.role == manager]
-      labels:
-        - "traefik.docker.network=traefik"
-        - "traefik.enable=true"
-        - "traefik.frontend.rule=PathPrefixStrip:/viz"
-        - "traefik.port=80"
-    networks:
-      - traefik
-
   app:
-    image: nginxdemos/hello
+    image: containous/whoami
     deploy:
       replicas: 2
-      restart_policy:
-        condition: on-failure
-      labels:
-        - "traefik.docker.network=traefik"
-        - "traefik.enable=true"
-        - "traefik.frontend.rule=Host:ubuntu1.com"
-        - "traefik.port=80"
-      resources:
-        limits:
-          cpus: "0.5"
-          memory: 100M
-    networks:
-      - default
-      - traefik
-
-  app2:
-    image: nginxdemos/hello:plain-text
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
       placement:
-        constraints: [node.role==worker]
+        constraints: [node.role == worker]
+      restart_policy:
+        condition: on-failure
       labels:
         - "traefik.docker.network=traefik"
         - "traefik.enable=true"
-        - "traefik.frontend.rule=PathPrefixStrip:/app2"
+        - "traefik.frontend.rule=Host:devx.lt"
         - "traefik.port=80"
       resources:
         limits:
